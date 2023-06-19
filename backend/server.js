@@ -1,11 +1,13 @@
 const express = require('express');
+const bodyParser = require('body-parser')
 const app = express();
 const pg = require('pg');
+const PORT = 3000;
 
-const cors = require("cors")
+const cors = require('cors')
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: '*'
 }))
 
 // PostgreSQL configuration
@@ -18,8 +20,15 @@ const pool = new pg.Pool({
 });
 
 // Express middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+
+app.use(bodyParser.json())
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+)
 
 // Routes
 app.get('/api/tasks', (req, res) => {
@@ -40,7 +49,8 @@ app.post('/api/tasks', (req, res) => {
       console.error('Error executing query', err);
       res.status(500).json({ error: 'Internal server error' });
     } else {
-      res.sendStatus(201);
+      const responseBody = { message: `Patient added with ID: ${results.rows[0].id}` };
+      res.sendStatus(201).json(responseBody);
     }
   });
 });
@@ -83,7 +93,7 @@ app.put('/api/tasks/:id/like', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
