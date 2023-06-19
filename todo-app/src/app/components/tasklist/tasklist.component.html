@@ -29,3 +29,6 @@
   <br>
   <button type="submit">Add Task</button>
 </form>
+
+<button *ngIf="selectedTaskId !== undefined" (click)="deleteTask(selectedTaskId)">Delete</button>
+<button *ngIf="selectedTaskId !== undefined" (click)="archiveTask(selectedTaskId)">Archive</button>

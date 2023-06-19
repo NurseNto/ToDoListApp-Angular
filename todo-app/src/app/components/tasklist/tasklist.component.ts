@@ -11,6 +11,7 @@ export class TasklistComponent implements OnInit {
 
   tasks: Task[] = [];
   editingTaskId: number | null = null;
+  selectedTaskId: number | undefined;
 
   constructor(private todoService: TodoService) { }
 
@@ -24,15 +25,20 @@ export class TasklistComponent implements OnInit {
   
 
   addTask(title: string, description: string): void {
-    const task: Task = { title, description, likes: 0 };
+    const task: Task = {
+      title, description, likes: 0,
+      archived: false,
+      done: false
+    };
     this.todoService.addTask(task).subscribe(() => {
       this.getTasks();
     });
   }
 
   editTask(task: Task): void {
-    this.editingTaskId = task.id;
+    this.editingTaskId = task.id ?? null;
   }
+  
 
   updateTask(task: Task): void {
     this.todoService.updateTask(task).subscribe(() => {
@@ -58,14 +64,17 @@ export class TasklistComponent implements OnInit {
     });
   }
 
-  archiveTask(id: number): void {
-    const task = this.tasks.find(t => t.id === id);
-    if (task) {
-      task.archived = true;
-      this.todoService.updateTask(task).subscribe(() => {
-        this.getTasks();
-      });
+  archiveTask(id: number | null): void {
+    if (id !== null) {
+      const task = this.tasks.find(t => t.id === id);
+      if (task) {
+        task.archived = true;
+        this.todoService.updateTask(task).subscribe(() => {
+          this.getTasks();
+        });
+      }
     }
   }
+  
   
 }

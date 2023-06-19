@@ -2,13 +2,19 @@ const express = require('express');
 const app = express();
 const pg = require('pg');
 
+const cors = require("cors")
+
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
+
 // PostgreSQL configuration
 const pool = new pg.Pool({
-  user: 'your_username',
-  password: 'your_password',
+  user: 'postgres',
+  password: 'Letsdoit!',
   host: 'localhost',
   port: 5432,
-  database: 'todo_app'
+  database: 'TODODB'
 });
 
 // Express middleware

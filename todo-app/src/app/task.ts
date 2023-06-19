@@ -4,4 +4,5 @@ export interface Task {
         description: string;
         likes: number;
         archived: boolean;      
+        done: boolean;
 }
